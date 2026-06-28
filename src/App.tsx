@@ -6,6 +6,7 @@ import GarmentCard from './components/GarmentCard';
 import GarmentDetailModal from './components/GarmentDetailModal';
 import GarmentForm from './components/GarmentForm';
 import BarcodeScanner from './components/BarcodeScanner';
+import { loadCloudState, saveCloudState, subscribeToCloudState } from './supabase';
 import { 
   Plus, 
   RotateCcw, 
@@ -41,6 +42,70 @@ export default function App() {
   const [isManageCategoriesOpen, setIsManageCategoriesOpen] = useState(false);
   const [isMobileSettingsOpen, setIsMobileSettingsOpen] = useState(false);
 
+  const fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
+    const rawUrl = typeof input === 'string' ? input : input instanceof URL ? input.pathname : input.url;
+    const url = rawUrl.startsWith('http') ? new URL(rawUrl).pathname : rawUrl;
+    const method = (init?.method || 'GET').toUpperCase();
+
+    if (!url.startsWith('/api/')) {
+      return window.fetch(input, init);
+    }
+
+    try {
+      const state = await loadCloudState();
+
+      if (url === '/api/garments' && method === 'GET') {
+        return Response.json(state.garments);
+      }
+
+      if (url === '/api/categories' && method === 'GET') {
+        return Response.json(state.categories);
+      }
+
+      if (url === '/api/garments' && method === 'POST') {
+        const garment = JSON.parse(String(init?.body || '{}'));
+        const nextGarment = {
+          ...garment,
+          id: garment.id || `g-${Date.now()}`,
+          createdAt: garment.createdAt || new Date().toISOString().split('T')[0],
+        } as Garment;
+        const nextGarments = garment.id
+          ? state.garments.map(g => g.id === garment.id ? { ...g, ...nextGarment } : g)
+          : [nextGarment, ...state.garments];
+        await saveCloudState({ garments: nextGarments, categories: state.categories });
+        return Response.json({ success: true, garments: nextGarments });
+      }
+
+      if (url.startsWith('/api/garments/') && method === 'DELETE') {
+        const id = decodeURIComponent(url.split('/').pop() || '');
+        const nextGarments = state.garments.filter(g => g.id !== id);
+        await saveCloudState({ garments: nextGarments, categories: state.categories });
+        return Response.json({ success: true, garments: nextGarments });
+      }
+
+      if (url === '/api/categories' && method === 'POST') {
+        const body = JSON.parse(String(init?.body || '{}'));
+        const nextCategories = Array.isArray(body.categories) ? body.categories : state.categories;
+        await saveCloudState({ garments: state.garments, categories: nextCategories });
+        return Response.json({ success: true, categories: nextCategories });
+      }
+
+      if (url === '/api/sync/overwrite' && method === 'POST') {
+        const body = JSON.parse(String(init?.body || '{}'));
+        if (!Array.isArray(body.garments) || !Array.isArray(body.categories)) {
+          return Response.json({ error: 'Invalid sync payload' }, { status: 400 });
+        }
+        await saveCloudState({ garments: body.garments, categories: body.categories });
+        return Response.json({ success: true, garments: body.garments, categories: body.categories });
+      }
+
+      return Response.json({ error: 'Not found' }, { status: 404 });
+    } catch (error) {
+      console.error('Supabase API adapter failed', error);
+      return Response.json({ error: 'Supabase request failed' }, { status: 500 });
+    }
+  };
+
   // Fetch from server API
   const fetchData = async () => {
     try {
@@ -58,23 +123,7 @@ export default function App() {
 
   useEffect(() => {
     fetchData();
-
-    // SSE connection for real-time synchronization
-    const eventSource = new EventSource('/api/sync/stream');
-    eventSource.onmessage = (event) => {
-      try {
-        const data = JSON.parse(event.data);
-        if (data.type === 'update') {
-          fetchData();
-        }
-      } catch (err) {
-        console.error('Failed to parse SSE event', err);
-      }
-    };
-
-    return () => {
-      eventSource.close();
-    };
+    return subscribeToCloudState(fetchData);
   }, []);
 
   const handleRenameCategory = async (oldName: string, newName: string): Promise<string | null> => {
