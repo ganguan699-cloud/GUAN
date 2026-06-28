@@ -11,6 +11,36 @@ interface GarmentFormProps {
 
 // Fallback default placeholder image if no image is uploaded
 const DEFAULT_PLACEHOLDER_IMAGE = 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&q=80&w=600&h=800';
+const MAX_IMAGE_EDGE = 1280;
+const IMAGE_QUALITY = 0.82;
+
+function compressImage(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('Failed to read image'));
+    reader.onload = () => {
+      const image = new Image();
+      image.onerror = () => reject(new Error('Failed to load image'));
+      image.onload = () => {
+        const scale = Math.min(1, MAX_IMAGE_EDGE / Math.max(image.width, image.height));
+        const width = Math.max(1, Math.round(image.width * scale));
+        const height = Math.max(1, Math.round(image.height * scale));
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const context = canvas.getContext('2d');
+        if (!context) {
+          reject(new Error('Canvas is not available'));
+          return;
+        }
+        context.drawImage(image, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/jpeg', IMAGE_QUALITY));
+      };
+      image.src = String(reader.result);
+    };
+    reader.readAsDataURL(file);
+  });
+}
 
 export default function GarmentForm({ garment, onSave, onCancel, categories }: GarmentFormProps) {
   const [name, setName] = useState('');
@@ -59,25 +89,16 @@ export default function GarmentForm({ garment, onSave, onCancel, categories }: G
     }
   }, [garment]);
 
-  const handleFiles = (files: FileList) => {
-    const loadedImages: string[] = [];
-    let processed = 0;
-    const fileCount = files.length;
-    if (fileCount === 0) return;
+  const handleFiles = async (files: FileList) => {
+    const imageFiles = Array.from(files).filter(file => file.type.startsWith('image/'));
+    if (imageFiles.length === 0) return;
 
-    for (let i = 0; i < fileCount; i++) {
-      const file = files[i];
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        if (typeof reader.result === 'string') {
-          loadedImages.push(reader.result);
-        }
-        processed++;
-        if (processed === fileCount) {
-          setCustomImages(prev => [...prev, ...loadedImages]);
-        }
-      };
-      reader.readAsDataURL(file);
+    try {
+      const loadedImages = await Promise.all(imageFiles.map(file => compressImage(file)));
+      setCustomImages(prev => [...prev, ...loadedImages]);
+    } catch (error) {
+      console.error('Image upload failed', error);
+      alert('图片处理失败，请换一张图片再试。');
     }
   };
 
@@ -249,6 +270,7 @@ export default function GarmentForm({ garment, onSave, onCancel, categories }: G
                   onChange={(e) => {
                     if (e.target.files) {
                       handleFiles(e.target.files);
+                      e.target.value = '';
                     }
                   }}
                 />

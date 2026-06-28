@@ -73,6 +73,8 @@ export default function App() {
           ? state.garments.map(g => g.id === garment.id ? { ...g, ...nextGarment } : g)
           : [nextGarment, ...state.garments];
         await saveCloudState({ garments: nextGarments, categories: state.categories });
+        setGarments(nextGarments);
+        setCategories(state.categories);
         return Response.json({ success: true, garments: nextGarments });
       }
 
@@ -80,6 +82,8 @@ export default function App() {
         const id = decodeURIComponent(url.split('/').pop() || '');
         const nextGarments = state.garments.filter(g => g.id !== id);
         await saveCloudState({ garments: nextGarments, categories: state.categories });
+        setGarments(nextGarments);
+        setCategories(state.categories);
         return Response.json({ success: true, garments: nextGarments });
       }
 
@@ -87,6 +91,8 @@ export default function App() {
         const body = JSON.parse(String(init?.body || '{}'));
         const nextCategories = Array.isArray(body.categories) ? body.categories : state.categories;
         await saveCloudState({ garments: state.garments, categories: nextCategories });
+        setGarments(state.garments);
+        setCategories(nextCategories);
         return Response.json({ success: true, categories: nextCategories });
       }
 
@@ -96,6 +102,8 @@ export default function App() {
           return Response.json({ error: 'Invalid sync payload' }, { status: 400 });
         }
         await saveCloudState({ garments: body.garments, categories: body.categories });
+        setGarments(body.garments);
+        setCategories(body.categories);
         return Response.json({ success: true, garments: body.garments, categories: body.categories });
       }
 
