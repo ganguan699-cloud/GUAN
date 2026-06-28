@@ -4,7 +4,6 @@ import { Garment } from './types';
 
 const SUPABASE_URL = 'https://qsciwldqdybkgduusesg.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_XNPRYYcOE_HWyRZW41A6hQ_wQKbmlXl';
-const STATE_ID = 'default';
 
 export type AppState = {
   garments: Garment[];
@@ -27,6 +26,14 @@ export const defaultAppState: AppState = {
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
+async function getCurrentUserId(): Promise<string> {
+  const { data, error } = await supabase.auth.getUser();
+  if (error || !data.user) {
+    throw new Error('Not signed in');
+  }
+  return data.user.id;
+}
+
 function normalizeState(value: unknown): AppState {
   const data = value as Partial<AppState> | null;
   return {
@@ -36,10 +43,11 @@ function normalizeState(value: unknown): AppState {
 }
 
 export async function loadCloudState(): Promise<AppState> {
+  const userId = await getCurrentUserId();
   const { data, error } = await supabase
     .from('app_state')
     .select('data')
-    .eq('id', STATE_ID)
+    .eq('id', userId)
     .maybeSingle();
 
   if (error) {
@@ -55,10 +63,11 @@ export async function loadCloudState(): Promise<AppState> {
 }
 
 export async function saveCloudState(nextState: AppState): Promise<void> {
+  const userId = await getCurrentUserId();
   const { error } = await supabase
     .from('app_state')
     .upsert({
-      id: STATE_ID,
+      id: userId,
       data: nextState,
       updated_at: new Date().toISOString(),
     });
@@ -77,7 +86,6 @@ export function subscribeToCloudState(onChange: () => void): () => void {
         event: '*',
         schema: 'public',
         table: 'app_state',
-        filter: `id=eq.${STATE_ID}`,
       },
       onChange,
     )

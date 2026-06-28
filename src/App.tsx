@@ -6,7 +6,9 @@ import GarmentCard from './components/GarmentCard';
 import GarmentDetailModal from './components/GarmentDetailModal';
 import GarmentForm from './components/GarmentForm';
 import BarcodeScanner from './components/BarcodeScanner';
-import { loadCloudState, saveCloudState, subscribeToCloudState } from './supabase';
+import AuthScreen from './components/AuthScreen';
+import { loadCloudState, saveCloudState, subscribeToCloudState, supabase } from './supabase';
+import type { Session } from '@supabase/supabase-js';
 import { 
   Plus, 
   RotateCcw, 
@@ -32,6 +34,9 @@ import {
 } from 'lucide-react';
 
 export default function App() {
+  const [session, setSession] = useState<Session | null>(null);
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
+
   // --- Persistent State & Role Management ---
   const [deviceRole, setDeviceRole] = useState<'master' | 'display'>(() => {
     return (localStorage.getItem('techwear_device_role') as 'master' | 'display') || 'master';
@@ -130,9 +135,29 @@ export default function App() {
   };
 
   useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session);
+      setIsAuthLoading(false);
+    });
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+      setSession(nextSession);
+      if (!nextSession) {
+        setGarments([]);
+        setCategories([]);
+      }
+    });
+
+    return () => {
+      listener.subscription.unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!session) return;
     fetchData();
     return subscribeToCloudState(fetchData);
-  }, []);
+  }, [session]);
 
   const handleRenameCategory = async (oldName: string, newName: string): Promise<string | null> => {
     const trimmed = newName.trim();
@@ -641,9 +666,28 @@ export default function App() {
     });
   }, [garments, selectedCategory, selectedStatus, selectedVideoLog, searchQuery]);
 
+  if (isAuthLoading) {
+    return (
+      <div className="min-h-screen bg-[#FAF8F5] flex items-center justify-center text-sm text-[#8C867E]">
+        正在检查登录状态...
+      </div>
+    );
+  }
+
+  if (!session) {
+    return <AuthScreen />;
+  }
+
   if (isRealMobile) {
     return (
       <div className="w-full min-h-screen bg-[#FAF8F5] text-[#2A2724] flex flex-col font-sans overflow-x-hidden p-4 relative selection:bg-[#B3A596] selection:text-white pb-36">
+        <button
+          type="button"
+          onClick={() => supabase.auth.signOut()}
+          className="absolute top-2 right-2 z-50 text-[10px] font-mono text-[#8C867E] bg-white border border-[#EAE6DF] rounded-full px-3 py-1 shadow-xs"
+        >
+          退出
+        </button>
         
         {/* Mobile Header */}
         <header className="flex justify-between items-center pb-3 border-b border-[#EAE6DF] mb-4 gap-4">
@@ -1103,6 +1147,13 @@ export default function App() {
 
   return (
     <div className="w-full min-h-screen bg-[#FAF8F5] text-[#2A2724] flex flex-col font-sans overflow-hidden p-4 md:p-8 selection:bg-[#B3A596] selection:text-white">
+      <button
+        type="button"
+        onClick={() => supabase.auth.signOut()}
+        className="fixed top-3 right-3 z-50 text-[10px] font-mono text-[#8C867E] bg-white border border-[#EAE6DF] rounded-full px-3 py-1 shadow-xs"
+      >
+        退出登录
+      </button>
       
       {/* TOP HEADER STATUS LINE */}
       <header className="flex flex-col md:flex-row justify-between items-start md:items-end pb-6 border-b border-[#EAE6DF] mb-8 gap-6 z-40 sticky top-0 bg-[#FAF8F5]/90 backdrop-blur-md pt-2">

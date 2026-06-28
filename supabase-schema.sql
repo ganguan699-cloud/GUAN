@@ -9,25 +9,35 @@ alter table public.app_state enable row level security;
 drop policy if exists "Allow public read app state" on public.app_state;
 drop policy if exists "Allow public insert app state" on public.app_state;
 drop policy if exists "Allow public update app state" on public.app_state;
+drop policy if exists "Allow own app state read" on public.app_state;
+drop policy if exists "Allow own app state insert" on public.app_state;
+drop policy if exists "Allow own app state update" on public.app_state;
+drop policy if exists "Allow own app state delete" on public.app_state;
 
-create policy "Allow public read app state"
+create policy "Allow own app state read"
   on public.app_state
   for select
-  to anon, authenticated
-  using (true);
+  to authenticated
+  using (id = auth.uid()::text);
 
-create policy "Allow public insert app state"
+create policy "Allow own app state insert"
   on public.app_state
   for insert
-  to anon, authenticated
-  with check (true);
+  to authenticated
+  with check (id = auth.uid()::text);
 
-create policy "Allow public update app state"
+create policy "Allow own app state update"
   on public.app_state
   for update
-  to anon, authenticated
-  using (true)
-  with check (true);
+  to authenticated
+  using (id = auth.uid()::text)
+  with check (id = auth.uid()::text);
+
+create policy "Allow own app state delete"
+  on public.app_state
+  for delete
+  to authenticated
+  using (id = auth.uid()::text);
 
 alter table public.app_state replica identity full;
 
