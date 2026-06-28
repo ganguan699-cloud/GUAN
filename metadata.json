@@ -1,0 +1,6 @@
+{
+  "name": "数字化服装管理系统",
+  "description": "数字化服装管理系统：包含编码复用与归档机制、多对多搭配与视频联动看板，提供极简高端温润奶油风触感交互体验。",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
