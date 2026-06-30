@@ -678,7 +678,7 @@ export default function App() {
     return <AuthScreen />;
   }
 
-  if (isRealMobile) {
+  if (true) {
     return (
       <div className="w-full min-h-screen bg-[#FAF8F5] text-[#2A2724] flex flex-col font-sans overflow-x-hidden p-4 relative selection:bg-[#B3A596] selection:text-white pb-36">
         <button
@@ -868,19 +868,11 @@ export default function App() {
 
           <div className="flex gap-2">
             <button
-              onClick={() => alert('Cloud sync is enabled for your signed-in Supabase account.')}
-              className="flex-1 py-2.5 bg-white border border-[#EAE6DF] hover:bg-[#FAF8F5] text-[#2A2724] rounded-full flex items-center justify-center gap-1.5 text-xs font-mono tracking-wider transition-all shadow-3xs active:scale-98"
-            >
-              <Wifi size={13} className="text-[#B3A596]" />
-              Cloud Sync
-            </button>
-
-            <button
               onClick={() => {
                 setEditingGarment(null);
                 setIsFormOpen(true);
               }}
-              className="flex-1 py-2.5 bg-[#2A2724] hover:bg-[#4E4237] rounded-full flex items-center justify-center gap-1.5 text-xs font-mono tracking-wider text-white transition-all shadow-sm active:scale-98"
+              className="w-full py-2.5 bg-[#2A2724] hover:bg-[#4E4237] rounded-full flex items-center justify-center gap-1.5 text-xs font-mono tracking-wider text-white transition-all shadow-sm active:scale-98"
             >
               <Plus size={13} />
               录入规格
