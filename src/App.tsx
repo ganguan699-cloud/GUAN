@@ -249,7 +249,7 @@ export default function App() {
   ]);
 
   // --- UI Layout Toggles ---
-  const [viewMode, setViewMode] = useState<'hybrid' | 'mobile-only'>('hybrid');
+  const [viewMode, setViewMode] = useState<'hybrid' | 'mobile-only'>('mobile-only');
   const [isRealMobile, setIsRealMobile] = useState(false);
 
   // --- PWA Installation & Status State ---
@@ -678,7 +678,7 @@ export default function App() {
     return <AuthScreen />;
   }
 
-  if (true) {
+  if (isRealMobile) {
     return (
       <div className="w-full min-h-screen bg-[#FAF8F5] text-[#2A2724] flex flex-col font-sans overflow-x-hidden p-4 relative selection:bg-[#B3A596] selection:text-white pb-36">
         <button
