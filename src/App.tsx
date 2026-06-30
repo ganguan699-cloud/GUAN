@@ -680,7 +680,7 @@ export default function App() {
 
   if (isRealMobile) {
     return (
-      <div className="w-full min-h-screen bg-[#FAF8F5] text-[#2A2724] flex flex-col font-sans overflow-x-hidden p-4 relative selection:bg-[#B3A596] selection:text-white pb-36">
+      <div className="w-full min-h-screen bg-[#FAF8F5] text-[#2A2724] flex flex-col font-sans overflow-x-hidden p-4 relative selection:bg-[#B3A596] selection:text-white pb-48">
         <button
           type="button"
           onClick={() => supabase.auth.signOut()}
@@ -851,7 +851,10 @@ export default function App() {
         </div>
 
         {/* BOTTOM FIXED APP BAR */}
-        <div className="fixed bottom-0 inset-x-0 p-4 bg-white/95 border-t border-[#EAE6DF] z-30 backdrop-blur-md flex flex-col gap-2 pb-[calc(1rem+env(safe-area-inset-bottom))]">
+        <div
+          className="fixed bottom-0 inset-x-0 p-4 bg-white/95 border-t border-[#EAE6DF] z-30 backdrop-blur-md flex flex-col gap-2"
+          style={{ paddingBottom: 'calc(1rem + max(env(safe-area-inset-bottom), 28px))' }}
+        >
           {/* Sizing Controller */}
           <div className="bg-[#FAF8F5] px-3 py-2 rounded-xl border border-[#EAE6DF]/70 shadow-3xs flex items-center gap-2">
             <SlidersHorizontal size={11} className="text-[#B3A596] shrink-0" />
@@ -872,7 +875,7 @@ export default function App() {
                 setEditingGarment(null);
                 setIsFormOpen(true);
               }}
-              className="w-full py-2.5 bg-[#2A2724] hover:bg-[#4E4237] rounded-full flex items-center justify-center gap-1.5 text-xs font-mono tracking-wider text-white transition-all shadow-sm active:scale-98"
+              className="w-full py-3 bg-[#2A2724] hover:bg-[#4E4237] rounded-full flex items-center justify-center gap-1.5 text-xs font-mono tracking-wider text-white transition-all shadow-sm active:scale-98"
             >
               <Plus size={13} />
               录入规格
@@ -918,8 +921,8 @@ export default function App() {
 
         {/* 3. CATEGORY MANAGEMENT OVERLAY DIALOG */}
         {isManageCategoriesOpen && (
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-50 p-4 font-sans animate-fade-in" id="manage-categories-modal">
-            <div className="bg-white rounded-2xl border border-[#EAE6DF] w-full max-w-md shadow-xl flex flex-col overflow-hidden max-h-[85vh] animate-scale-up">
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-50 p-3 sm:p-4 font-sans animate-fade-in" id="manage-categories-modal">
+            <div className="bg-white rounded-2xl border border-[#EAE6DF] w-full max-w-md shadow-xl flex flex-col overflow-hidden max-h-[calc(100dvh-1.5rem)] animate-scale-up">
               
               {/* Header */}
               <div className="p-4 border-b border-[#EAE6DF] flex justify-between items-center bg-[#FAF8F5]">
@@ -960,7 +963,7 @@ export default function App() {
               </div>
 
               {/* Footer */}
-              <div className="p-4 border-t border-[#EAE6DF] bg-[#FAF8F5] flex justify-end">
+              <div className="p-4 border-t border-[#EAE6DF] bg-[#FAF8F5] flex justify-end" style={{ paddingBottom: 'calc(1rem + max(env(safe-area-inset-bottom), 24px))' }}>
                 <button
                   type="button"
                   onClick={() => setIsManageCategoriesOpen(false)}
@@ -1943,7 +1946,10 @@ function getEpisodesForGarment(garmentCode: string, shows: VideoShow[]): string[
               </div>
 
               {/* PHONE FOOTER FLOATING APP BAR */}
-              <div className="absolute bottom-0 inset-x-0 p-4 bg-white/95 border-t border-[#EAE6DF] z-30 backdrop-blur-md flex flex-col gap-2.5">
+              <div
+                className="absolute bottom-0 inset-x-0 p-4 bg-white/95 border-t border-[#EAE6DF] z-30 backdrop-blur-md flex flex-col gap-2.5"
+                style={{ paddingBottom: 'calc(1rem + max(env(safe-area-inset-bottom), 24px))' }}
+              >
                 {/* Fixed Dynamic Zoom Slider driving column counts and padding concurrently */}
                 <div className="bg-[#FAF8F5] px-3 py-2.5 rounded-xl border border-[#EAE6DF]/70 shadow-3xs flex items-center gap-2">
                   <SlidersHorizontal size={12} className="text-[#B3A596] shrink-0" />
@@ -1963,7 +1969,7 @@ function getEpisodesForGarment(garmentCode: string, shows: VideoShow[]): string[
                     setEditingGarment(null);
                     setIsFormOpen(true);
                   }}
-                  className="w-full py-2.5 bg-[#2A2724] hover:bg-[#4E4237] rounded-full flex items-center justify-center gap-1.5 text-xs font-mono tracking-widest text-white transition-all shadow-sm active:scale-98"
+                  className="w-full py-3 bg-[#2A2724] hover:bg-[#4E4237] rounded-full flex items-center justify-center gap-1.5 text-xs font-mono tracking-widest text-white transition-all shadow-sm active:scale-98"
                 >
                   <Plus size={14} />
                   登记录入服装规格档案
@@ -2040,8 +2046,8 @@ function getEpisodesForGarment(garmentCode: string, shows: VideoShow[]): string[
 
       {/* 3. CATEGORY MANAGEMENT OVERLAY DIALOG */}
       {isManageCategoriesOpen && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-50 p-4 font-sans animate-fade-in" id="manage-categories-modal">
-          <div className="bg-white rounded-2xl border border-[#EAE6DF] w-full max-w-md shadow-xl flex flex-col overflow-hidden max-h-[85vh] animate-scale-up">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-50 p-3 sm:p-4 font-sans animate-fade-in" id="manage-categories-modal">
+          <div className="bg-white rounded-2xl border border-[#EAE6DF] w-full max-w-md shadow-xl flex flex-col overflow-hidden max-h-[calc(100dvh-1.5rem)] animate-scale-up">
             
             {/* Header */}
             <div className="p-4 border-b border-[#EAE6DF] flex justify-between items-center bg-[#FAF8F5]">
@@ -2082,7 +2088,7 @@ function getEpisodesForGarment(garmentCode: string, shows: VideoShow[]): string[
             </div>
 
             {/* Footer */}
-            <div className="p-4 border-t border-[#EAE6DF] bg-[#FAF8F5] flex justify-end">
+            <div className="p-4 border-t border-[#EAE6DF] bg-[#FAF8F5] flex justify-end" style={{ paddingBottom: 'calc(1rem + max(env(safe-area-inset-bottom), 24px))' }}>
               <button
                 type="button"
                 onClick={() => setIsManageCategoriesOpen(false)}
@@ -2104,24 +2110,30 @@ function getEpisodesForGarment(garmentCode: string, shows: VideoShow[]): string[
 function CategoryAddForm({ onAdd }: { onAdd: (name: string) => string | null | Promise<string | null> }) {
   const [newCat, setNewCat] = useState('');
   const [error, setError] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const trimmed = newCat.trim();
-    if (!trimmed) return;
-    const errMsg = await onAdd(trimmed);
-    if (errMsg) {
-      setError(errMsg);
-    } else {
-      setNewCat('');
-      setError('');
+    if (!trimmed || isSaving) return;
+    setIsSaving(true);
+    try {
+      const errMsg = await onAdd(trimmed);
+      if (errMsg) {
+        setError(errMsg);
+      } else {
+        setNewCat('');
+        setError('');
+      }
+    } finally {
+      setIsSaving(false);
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-2 bg-[#FAF8F5] p-4 rounded-xl border border-[#EAE6DF]">
       <label className="block text-xs font-mono text-[#8C867E] tracking-wider uppercase font-semibold">新增品类</label>
-      <div className="flex gap-2">
+      <div className="flex flex-col sm:flex-row gap-2">
         <input
           type="text"
           value={newCat}
@@ -2130,12 +2142,13 @@ function CategoryAddForm({ onAdd }: { onAdd: (name: string) => string | null | P
             if (error) setError('');
           }}
           placeholder="例如：配饰、包袋、背心"
-          className="flex-grow bg-white border border-[#EAE6DF] rounded-xl px-3.5 py-2.5 text-sm text-[#2A2724] focus:outline-none focus:border-[#B3A596]"
+          className="w-full flex-grow bg-white border border-[#EAE6DF] rounded-xl px-3.5 py-3 text-sm text-[#2A2724] focus:outline-none focus:border-[#B3A596]"
           maxLength={15}
         />
         <button
           type="submit"
-          className="bg-[#B3A596] hover:bg-[#a39484] text-white rounded-xl px-4 py-2.5 text-sm font-medium transition-colors whitespace-nowrap flex items-center gap-1 shadow-2xs"
+          disabled={isSaving || !newCat.trim()}
+          className="w-full sm:w-auto bg-[#B3A596] hover:bg-[#a39484] disabled:bg-zinc-300 disabled:text-zinc-500 text-white rounded-xl px-4 py-3 text-sm font-medium transition-colors whitespace-nowrap flex items-center justify-center gap-1 shadow-2xs"
         >
           <Plus size={14} />
           添加

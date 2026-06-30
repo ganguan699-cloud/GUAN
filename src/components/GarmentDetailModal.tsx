@@ -161,7 +161,7 @@ export default function GarmentDetailModal({
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs overflow-y-auto cursor-pointer"
+      className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/50 backdrop-blur-xs overflow-hidden cursor-pointer"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -169,7 +169,7 @@ export default function GarmentDetailModal({
       {/* Centered clean modal block */}
       <div 
         ref={modalRef}
-        className="relative w-full max-w-2xl bg-white border border-[#EAE6DF] rounded-2xl overflow-hidden my-8 shadow-2xl text-[#2A2724] animate-fade-in flex flex-col max-h-[90vh] md:max-h-[85vh] cursor-default"
+        className="relative w-full max-w-2xl h-[calc(100dvh-1rem)] md:h-auto bg-white border border-[#EAE6DF] rounded-2xl overflow-hidden my-0 md:my-8 shadow-2xl text-[#2A2724] animate-fade-in flex flex-col max-h-[calc(100dvh-1rem)] md:max-h-[85vh] cursor-default"
         id={`garment-detail-modal-${garment.id}`}
         onClick={(e) => e.stopPropagation()}
       >
@@ -200,8 +200,8 @@ export default function GarmentDetailModal({
         <div className="flex-grow flex flex-col md:flex-row overflow-hidden min-h-0">
           
           {/* LEFT COLUMN: Image Showcase (Sticky on desktop, top on mobile) */}
-          <div className="w-full md:w-[240px] lg:w-[280px] shrink-0 border-b md:border-b-0 md:border-r border-[#EAE6DF] bg-[#FAF8F5]/30 p-5 flex flex-col items-center justify-start gap-4 overflow-y-auto">
-            <div className="relative w-full aspect-[3/4] rounded-xl overflow-hidden border border-[#EAE6DF] bg-white shadow-3xs flex items-center justify-center">
+          <div className="w-full h-[40dvh] md:h-auto md:w-[240px] lg:w-[280px] shrink-0 border-b md:border-b-0 md:border-r border-[#EAE6DF] bg-[#FAF8F5]/30 p-4 md:p-5 flex flex-col items-center justify-start gap-3 md:gap-4 overflow-hidden md:overflow-y-auto">
+            <div className="relative w-full h-full md:h-auto md:aspect-[3/4] rounded-xl overflow-hidden border border-[#EAE6DF] bg-white shadow-3xs flex items-center justify-center">
               <img 
                 src={selectedModalImage} 
                 alt={garment.code} 
@@ -546,7 +546,10 @@ export default function GarmentDetailModal({
         </div>
 
           {/* Bottom Sticky Action Panel - Clean Buttons */}
-          <div className="border-t border-[#EAE6DF] p-6 bg-[#FAF8F5]/30 flex items-center justify-end gap-2 sticky bottom-0 z-30">
+          <div
+            className="border-t border-[#EAE6DF] p-3 md:p-6 bg-[#FAF8F5]/95 flex items-center justify-end gap-2 sticky bottom-0 z-30 backdrop-blur-md flex-wrap"
+            style={{ paddingBottom: 'calc(0.75rem + max(env(safe-area-inset-bottom), 24px))' }}
+          >
             {isReadOnly ? (
               <span className="font-mono text-[9px] tracking-widest text-[#B3A596] uppercase bg-white border border-[#EAE6DF] px-4 py-2 rounded-full shadow-3xs animate-pulse flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
@@ -556,7 +559,7 @@ export default function GarmentDetailModal({
               <>
                 <button
                   onClick={() => onEdit(garment)}
-                  className="flex items-center justify-center gap-1.5 px-4 py-2 bg-white border border-[#EAE6DF] hover:border-[#B3A596] text-[#2A2724] rounded-full font-mono text-xs uppercase tracking-wider transition-colors animate-fade-in"
+                  className="flex-1 sm:flex-none min-w-[120px] flex items-center justify-center gap-1.5 px-4 py-2 bg-white border border-[#EAE6DF] hover:border-[#B3A596] text-[#2A2724] rounded-full font-mono text-xs uppercase tracking-wider transition-colors animate-fade-in"
                 >
                   <Edit3 size={11} />
                   编辑 Spec
@@ -564,7 +567,7 @@ export default function GarmentDetailModal({
                 
                 <button
                   onClick={() => onToggleStatus(garment.id)}
-                  className={`flex items-center justify-center gap-1.5 px-4 py-2 border rounded-full text-xs font-mono uppercase tracking-wider transition-all duration-200 ${
+                  className={`flex-1 sm:flex-none min-w-[120px] flex items-center justify-center gap-1.5 px-4 py-2 border rounded-full text-xs font-mono uppercase tracking-wider transition-all duration-200 ${
                     isActive 
                       ? 'border-[#EAE6DF] text-[#8C867E] hover:bg-[#FAF8F5] hover:text-[#2A2724]' 
                       : 'border-[#B3A596] text-white bg-[#B3A596] hover:bg-[#4E4237]'

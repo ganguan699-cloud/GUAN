@@ -162,9 +162,9 @@ export default function GarmentForm({ garment, onSave, onCancel, categories }: G
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs overflow-y-auto">
-      <div className="relative w-full max-w-2xl bg-white border border-[#EAE6DF] rounded-2xl p-6 overflow-hidden my-8 shadow-xl">
-        <div className="flex items-center justify-between mb-6 pb-3 border-b border-[#EAE6DF]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/40 backdrop-blur-xs overflow-hidden">
+      <div className="relative w-full max-w-2xl bg-white border border-[#EAE6DF] rounded-2xl overflow-hidden my-0 sm:my-8 shadow-xl max-h-[calc(100dvh-1rem)] flex flex-col">
+        <div className="flex items-center justify-between p-4 sm:p-6 pb-3 border-b border-[#EAE6DF] shrink-0">
           <div>
             <span className="font-mono text-[9px] text-[#8C867E] tracking-widest uppercase">衣橱电子规格登记表</span>
             <h2 className="font-display text-xl font-medium text-[#2A2724] mt-0.5">
@@ -180,7 +180,7 @@ export default function GarmentForm({ garment, onSave, onCancel, categories }: G
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4 text-[#2A2724]">
+        <form onSubmit={handleSubmit} className="space-y-4 text-[#2A2724] overflow-y-auto px-4 sm:px-6 py-4 pb-0 min-h-0">
           
           {/* Main Grid: Code, Category */}
           <div className="grid grid-cols-1 gap-4">
@@ -431,17 +431,20 @@ export default function GarmentForm({ garment, onSave, onCancel, categories }: G
           </div>
 
           {/* Actions */}
-          <div className="flex items-center justify-end gap-3 border-t border-[#EAE6DF] pt-5 mt-4">
+          <div
+            className="sticky bottom-0 -mx-4 sm:-mx-6 px-4 sm:px-6 flex items-center justify-end gap-3 border-t border-[#EAE6DF] pt-4 mt-4 bg-white/95 backdrop-blur-md"
+            style={{ paddingBottom: 'calc(1rem + max(env(safe-area-inset-bottom), 24px))' }}
+          >
             <button
               type="button"
               onClick={onCancel}
-              className="px-4 py-2 bg-transparent border border-[#EAE6DF] hover:border-[#B3A596] text-[#8C867E] hover:text-[#2A2724] rounded-full text-xs font-mono uppercase tracking-widest transition-all"
+              className="flex-1 sm:flex-none px-4 py-2.5 bg-transparent border border-[#EAE6DF] hover:border-[#B3A596] text-[#8C867E] hover:text-[#2A2724] rounded-full text-xs font-mono uppercase tracking-widest transition-all"
             >
               取消
             </button>
             <button
               type="submit"
-              className="px-5 py-2 bg-[#2A2724] hover:bg-[#4E4237] text-white rounded-full text-xs font-mono font-medium uppercase tracking-widest transition-all shadow-sm active:scale-95"
+              className="flex-1 sm:flex-none px-5 py-2.5 bg-[#2A2724] hover:bg-[#4E4237] text-white rounded-full text-xs font-mono font-medium uppercase tracking-widest transition-all shadow-sm active:scale-95"
             >
               {garment ? '保存更新' : '完成登记'}
             </button>
