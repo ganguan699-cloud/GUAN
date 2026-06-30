@@ -200,12 +200,12 @@ export default function GarmentDetailModal({
         <div className="flex-grow flex flex-col md:flex-row overflow-hidden min-h-0">
           
           {/* LEFT COLUMN: Image Showcase (Sticky on desktop, top on mobile) */}
-          <div className="w-full h-[40dvh] md:h-auto md:w-[240px] lg:w-[280px] shrink-0 border-b md:border-b-0 md:border-r border-[#EAE6DF] bg-[#FAF8F5]/30 p-4 md:p-5 flex flex-col items-center justify-start gap-3 md:gap-4 overflow-hidden md:overflow-y-auto">
-            <div className="relative w-full h-full md:h-auto md:aspect-[3/4] rounded-xl overflow-hidden border border-[#EAE6DF] bg-white shadow-3xs flex items-center justify-center">
+          <div className="w-full h-[32dvh] md:h-auto md:w-[240px] lg:w-[280px] shrink-0 border-b md:border-b-0 md:border-r border-[#EAE6DF] bg-[#FAF8F5]/30 p-4 md:p-5 flex flex-col items-center justify-start gap-3 md:gap-4 overflow-hidden md:overflow-y-auto">
+            <div className="relative w-full h-full md:h-auto md:aspect-[3/4] rounded-xl overflow-hidden border border-[#EAE6DF] bg-white shadow-3xs flex items-center justify-center p-2">
               <img 
                 src={selectedModalImage} 
                 alt={garment.code} 
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
                 referrerPolicy="no-referrer"
                 onError={(e) => {
                   e.currentTarget.src = `https://picsum.photos/seed/${garment.code}/600/800`;
