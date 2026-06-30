@@ -868,11 +868,11 @@ export default function App() {
 
           <div className="flex gap-2">
             <button
-              onClick={() => setIsMobileSettingsOpen(true)}
+              onClick={() => alert('Cloud sync is enabled for your signed-in Supabase account.')}
               className="flex-1 py-2.5 bg-white border border-[#EAE6DF] hover:bg-[#FAF8F5] text-[#2A2724] rounded-full flex items-center justify-center gap-1.5 text-xs font-mono tracking-wider transition-all shadow-3xs active:scale-98"
             >
               <Wifi size={13} className="text-[#B3A596]" />
-              同步与PWA配置
+              Cloud Sync
             </button>
 
             <button
@@ -1535,6 +1535,22 @@ function getEpisodesForGarment(garmentCode: string, shows: VideoShow[]): string[
             </div>
 
             {/* 局域网同步与多端备份控制中心 */}
+            <div className="bg-white border border-[#EAE6DF] rounded-2xl p-5 shadow-xs">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center">
+                    <Wifi size={15} className="text-emerald-700" />
+                  </div>
+                  <div>
+                    <div className="font-mono text-[10px] text-[#2A2724] tracking-wider uppercase">Cloud sync enabled</div>
+                    <div className="text-xs text-[#8C867E] mt-0.5">Signed-in account data syncs through Supabase automatically.</div>
+                  </div>
+                </div>
+                <span className="font-mono text-[9px] px-2.5 py-1 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-full shrink-0">Online</span>
+              </div>
+            </div>
+
+            {false && <>
             <div className="bg-white border border-[#EAE6DF] rounded-2xl p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between border-b border-[#FAF8F5] pb-3">
                 <div className="flex items-center gap-2">
@@ -1739,6 +1755,7 @@ function getEpisodesForGarment(garmentCode: string, shows: VideoShow[]): string[
                 )}
               </div>
             </div>
+            </>}
 
           </section>
         )}
